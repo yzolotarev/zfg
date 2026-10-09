@@ -1,0 +1,20 @@
+{
+  "id": "zfg-focus",
+  "name": "ZFG Focus",
+  "version": "0.1.0",
+  "author": "Yaroslav <y@localhost>",
+  "description": "A Focus counter and launcher for ZFG plain-text tasks.",
+  "license": "MIT",
+  "official": false,
+  "hosts": ["topbarGlyph"],
+  "entryPoints": {"main": "service/Main.qml", "content": "content/Widget.qml", "panel": "content/Panel.qml"},
+  "panel": {"width": 360},
+  "files": [],
+  "capabilities": {"densities": ["glyph", "compact"]},
+  "defaults": {"host": "topbarGlyph", "label": "ZFG Focus"},
+  "dependencies": {"commands": ["zfg"]},
+  "metadata": {"settings": [
+    {"key":"binary", "type":"text", "label":"ZFG executable", "group":"Integration", "default":"zfg"},
+    {"key":"pollSeconds", "type":"int", "label":"Refresh interval (seconds)", "group":"Integration", "default":2, "min":1, "max":10}
+  ]}
+}
