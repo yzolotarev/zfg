@@ -14,6 +14,18 @@ A low-friction Linux capture and routing layer for short Focus and Later task li
 - Ships a Ryoku QS Bar plugin with first Focus text, `N/5`, and `+`; it polls the same CLI status used by other adapters.
 - Offers configured Note and Calendar URI defaults. Custom commands use argv arrays, not `/bin/sh -c`.
 
+## Install on Ryoku
+
+One command builds ZFG, installs it with its menu entry and icon, and puts the Focus widget on the QS Bar next to the clock:
+
+```sh
+sudo pacman -S --needed rust gtk4 gtk4-layer-shell   # build dependencies on Arch
+git clone https://github.com/yzolotarev/zfg && cd zfg
+python3 scripts/install-native.py --ryoku
+```
+
+Without `--ryoku` it installs only the app. Add `--dry-run` to see every step first.
+
 ## Quick start
 
 ```sh
@@ -56,10 +68,14 @@ cargo test --locked --all
 - Verify portal shortcut approval/delivery and sandboxed URI opening on target desktops.
 - Test multi-monitor/high-DPI behavior and improve pointer-relative placement where supported.
 - Collect daily-use visual feedback and privacy-safe release screenshots.
-- Confirm the public name, GitHub owner, app ID, and methodology attribution before release.
+- Move the provisional app ID `io.github.zfg` to one matching this repository before Flathub submission.
 - Build the prepared offline-source Flatpak manifest in the SDK, then replace local sources with immutable release sources before Flathub submission.
 
 See [architecture](docs/architecture.md), [integrations](docs/integrations.md), [privacy](docs/privacy.md), and [implementation notes](IMPLEMENTATION_NOTES.md).
+
+## Methodology
+
+The Focus/Later method is Alexander Votyakov's. ZFG is software for it, written by Yaroslav Zolotarev; it does not claim the method as its own.
 
 ## License
 

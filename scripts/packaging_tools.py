@@ -76,6 +76,24 @@ def native(args):
         run(["install", "-D", "-m", mode, str(source), str(destination)], args.dry_run)
     print(f"Add {prefix / 'bin'} to PATH. Desktop discovery requires the prefix's share directory in XDG_DATA_DIRS.")
     print("Installed desktop metadata and the application icon. Public identity is still provisional.")
+    return ryoku_widget(args.dry_run) if args.ryoku else 0
+
+
+def ryoku_widget(dry=False):
+    """Put the zfg-focus widget on the Ryoku QS Bar, after the clock."""
+    if not shutil.which("ryoku"):
+        print("Ryoku not found; skipping the bar widget.", file=sys.stderr)
+        return 1
+    plugin = ROOT / "ryoku-plugin/zfg-focus"
+    if not dry:
+        listed = subprocess.run(["ryoku", "plugin", "list", "--json"], capture_output=True, text=True)
+        if listed.returncode == 0 and '"zfg-focus"' in listed.stdout:
+            print("The zfg-focus widget is already installed; leaving it as it is.")
+            return 0
+    run(["ryoku", "plugin", "validate", str(plugin)], dry)
+    run(["ryoku", "plugin", "add", str(plugin), "--bar", "--yes"], dry)
+    run(["ryoku-shell", "bar", "move", "zfg-focus", "--section", "center", "--after", "clock"], dry)
+    print("The widget is on the bar; QS Bar Settings > Layout can move it.")
     return 0
 
 
@@ -153,6 +171,7 @@ def main(mode):
         if mode == "native":
             parser.add_argument("--prefix", default="~/.local", help="user-owned install prefix (default: ~/.local)")
             parser.add_argument("--offline", action="store_true", help="require cached or vendored dependencies")
+            parser.add_argument("--ryoku", action="store_true", help="also put the zfg-focus widget on the Ryoku QS Bar")
         else:
             parser.add_argument("--output", default=str(ROOT / "packaging/flatpak/prepared"),
                                 help="new direct child of packaging/flatpak; existing paths are never overwritten")

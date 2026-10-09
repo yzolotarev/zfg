@@ -2,7 +2,7 @@
   "id": "zfg-focus",
   "name": "ZFG Focus",
   "version": "0.1.0",
-  "author": "Yaroslav <y@localhost>",
+  "author": "Yaroslav Zolotarev <290464757+yzolotarev@users.noreply.github.com>",
   "description": "A Focus counter and launcher for ZFG plain-text tasks.",
   "license": "MIT",
   "official": false,
