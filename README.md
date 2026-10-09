@@ -1,5 +1,7 @@
 # ZFG
 
+![zfg](assets/cover.jpg)
+
 A low-friction Linux capture and routing layer for short Focus and Later task lists.
 
 ![Concept UI — illustration, not the shipped launcher](assets/screenshots/zfg-workflow-concept.png)
