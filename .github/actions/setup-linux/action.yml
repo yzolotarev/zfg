@@ -1,0 +1,24 @@
+name: Linux GTK build environment
+description: Install GTK dependencies and build a checksum-pinned GTK layer-shell library
+runs:
+  using: composite
+  steps:
+    - name: Install system build tools
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-4-dev libwayland-dev wayland-protocols meson ninja-build pkg-config curl
+    - name: Build GTK layer-shell 1.3.0
+      shell: bash
+      run: |
+        set -euo pipefail
+        source_dir="$RUNNER_TEMP/zfg-layer-shell"
+        mkdir -p "$source_dir"
+        curl --fail --location --retry 3 https://codeload.github.com/wmww/gtk4-layer-shell/tar.gz/refs/tags/v1.3.0 --output "$source_dir/source.tar.gz"
+        printf '%s  %s\n' '1ebb01ab14e98afd1727f68f64981c37bd23305b1f131f5667c02b94cf593192' "$source_dir/source.tar.gz" | sha256sum --check
+        tar --extract --gzip --file "$source_dir/source.tar.gz" --directory "$source_dir" --strip-components=1
+        meson setup "$source_dir/build" "$source_dir" --prefix=/usr/local -Dexamples=false -Ddocs=false -Dtests=false -Dsmoke-tests=false -Dintrospection=false -Dvapi=false
+        meson compile -C "$source_dir/build"
+        sudo meson install -C "$source_dir/build"
+        sudo ldconfig
+        pkg-config --modversion gtk4 gtk4-layer-shell-0

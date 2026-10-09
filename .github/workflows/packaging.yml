@@ -1,0 +1,48 @@
+name: Local packaging checks
+on:
+  push:
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'src/**'
+      - 'data/**'
+      - 'locales/**'
+      - 'assets/icons/**'
+      - 'scripts/**'
+      - 'packaging/**'
+      - 'docs/flatpak.md'
+      - '.github/workflows/packaging.yml'
+  pull_request:
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'src/**'
+      - 'data/**'
+      - 'locales/**'
+      - 'assets/icons/**'
+      - 'scripts/**'
+      - 'packaging/**'
+      - 'docs/flatpak.md'
+      - '.github/workflows/packaging.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Test help and non-destructive dry-run paths
+        run: python3 -B scripts/test-packaging.py
+      - name: Generate locked vendor directory and local manifest
+        run: python3 -B scripts/prepare-flatpak.py
+      - name: Verify offline resolution with an empty Cargo home
+        env:
+          ZFG_PREPARED: packaging/flatpak/prepared
+        run: python3 -B scripts/test-packaging.py
+      - name: Explain scope
+        run: echo 'Local source preparation only. No Flatpak build, GUI validation, release publication, or Flathub compatibility is claimed.'
