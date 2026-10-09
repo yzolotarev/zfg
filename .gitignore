@@ -1,0 +1,8 @@
+/target/
+*.swp
+/packaging/flatpak/prepared/
+__pycache__/
+*.pyc
+/flatpak-build/
+/repo/
+/ZFG Workflow_ Focused Productivity Desktop.png
