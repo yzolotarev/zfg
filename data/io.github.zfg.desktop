@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=ZFG
+Comment=Quickly route incoming notes, events and tasks
+Exec=zfg launcher
+Icon=io.github.zfg
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=focus;tasks;capture;
+StartupWMClass=io.github.zfg

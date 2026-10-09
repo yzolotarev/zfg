@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.zfg</id>
+  <name>ZFG</name>
+  <summary>A local capture and routing layer for Focus and Later tasks</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <launchable type="desktop-id">io.github.zfg.desktop</launchable>
+  <description>
+    <p>Capture incoming items and route actionable tasks into a short Focus list or an unbounded Later list. Task data stays in readable plain-text files.</p>
+    <p>The current early implementation includes a command-line interface and an initial GTK launcher and task lists. The final radial pie workflow and desktop integrations are still in development.</p>
+  </description>
+
+  <developer id="io.github.zfg"><name>ZFG contributors</name></developer>
+  <categories><category>Utility</category><category>Office</category></categories>
+  <keywords><keyword>focus</keyword><keyword>tasks</keyword><keyword>capture</keyword></keywords>
+  <content_rating type="oars-1.1"/>
+  <releases><release version="0.1.0" date="2026-10-01"><description><p>Early development build.</p></description></release></releases>
+</component>
