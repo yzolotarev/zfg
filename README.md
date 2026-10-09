@@ -16,7 +16,7 @@ A low-friction Linux capture and routing layer for short Focus and Later task li
 
 ## Install on Ryoku
 
-One command builds ZFG, installs it with its menu entry and icon, and puts the Focus widget on the QS Bar next to the clock:
+One command builds ZFG, installs it with its menu entry and icon, binds the launcher pie to Super+Z, and puts the Focus widget on the QS Bar next to the clock:
 
 ```sh
 sudo pacman -S --needed rust gtk4 gtk4-layer-shell   # build dependencies on Arch

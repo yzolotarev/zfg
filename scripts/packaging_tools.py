@@ -76,7 +76,38 @@ def native(args):
         run(["install", "-D", "-m", mode, str(source), str(destination)], args.dry_run)
     print(f"Add {prefix / 'bin'} to PATH. Desktop discovery requires the prefix's share directory in XDG_DATA_DIRS.")
     print("Installed desktop metadata and the application icon. Public identity is still provisional.")
-    return ryoku_widget(args.dry_run) if args.ryoku else 0
+    if not args.ryoku:
+        return 0
+    hyprland_keys(prefix, args.dry_run)
+    return ryoku_widget(args.dry_run)
+
+
+HYPR_BEGIN = "-- zfg: begin (managed by zfg's install-native.py; rerun it to update)"
+HYPR_END = "-- zfg: end"
+
+
+def hyprland_keys(prefix, dry=False):
+    """Write the Super+Z launcher key into one marked block of hypr/user.lua."""
+    config = Path(os.environ.get("XDG_CONFIG_HOME", "~/.config")).expanduser() / "hypr/user.lua"
+    bin_dir = prefix / "bin"
+    block = "\n".join([
+        HYPR_BEGIN,
+        f'hl.bind("SUPER + Z", hl.dsp.exec_cmd({json.dumps(shlex.quote(str(bin_dir / "zfg")) + " launcher", ensure_ascii=False)}))',
+        HYPR_END,
+    ])
+    text = config.read_text() if config.exists() else ""
+    if HYPR_BEGIN in text and HYPR_END in text:
+        head, rest = text.split(HYPR_BEGIN, 1)
+        text = head + block + rest.split(HYPR_END, 1)[1]
+    else:
+        text = text + ("\n" if text and not text.endswith("\n") else "") + "\n" + block + "\n"
+    print(f"+ write the zfg keys block (Super+Z) into {config}")
+    if dry:
+        return
+    config.parent.mkdir(parents=True, exist_ok=True)
+    config.write_text(text)
+    if shutil.which("hyprctl"):
+        run(["hyprctl", "reload"], dry, stdout=subprocess.DEVNULL)
 
 
 def ryoku_widget(dry=False):
@@ -171,7 +202,7 @@ def main(mode):
         if mode == "native":
             parser.add_argument("--prefix", default="~/.local", help="user-owned install prefix (default: ~/.local)")
             parser.add_argument("--offline", action="store_true", help="require cached or vendored dependencies")
-            parser.add_argument("--ryoku", action="store_true", help="also put the zfg-focus widget on the Ryoku QS Bar")
+            parser.add_argument("--ryoku", action="store_true", help="also bind Super+Z in hypr/user.lua and put the widget on the Ryoku QS Bar")
         else:
             parser.add_argument("--output", default=str(ROOT / "packaging/flatpak/prepared"),
                                 help="new direct child of packaging/flatpak; existing paths are never overwritten")
